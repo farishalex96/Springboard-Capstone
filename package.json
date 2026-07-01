@@ -1,0 +1,16 @@
+{
+  "name": "greenlight",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "concurrently \"npm --prefix frontend run dev\" \"npm --prefix backend run dev\"",
+    "start": "npm --prefix backend run start",
+    "install:all": "npm install --prefix frontend && npm install --prefix backend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "dependencies": {
+    "mongodb": "^7.3.0"
+  }
+}
