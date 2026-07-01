@@ -19,5 +19,7 @@ Do not deploy local `.env` files. Set these variables in your deployment host in
 - `MONGODB_URI` - MongoDB Atlas connection string for the `greenlight` database
 - `JWT_SECRET` - long random secret used to sign auth tokens
 - `PORT` - backend port, usually supplied by the host
+- `FRONTEND_URL` - deployed frontend URL allowed by backend CORS
+- `VITE_API_URL` - deployed backend URL used by the frontend build
 
 Use `backend/.env.example` as the template for local setup.

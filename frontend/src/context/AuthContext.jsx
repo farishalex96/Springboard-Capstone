@@ -1,11 +1,14 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
+import apiBaseUrl from '../utils/apiBaseUrl';
 
 const AuthContext = createContext(null);
 
 export const useAuth = () => useContext(AuthContext);
 
-const api = axios.create({ baseURL: '' });
+axios.defaults.baseURL = apiBaseUrl;
+
+const api = axios.create({ baseURL: apiBaseUrl });
 
 const setAuthHeader = (token) => {
   if (token) {

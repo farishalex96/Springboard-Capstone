@@ -12,6 +12,9 @@ import userRoutes from './routes/users.js';
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
+const allowedOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(',').map((origin) => origin.trim()).filter(Boolean)
+  : [];
 
 if (!process.env.JWT_SECRET) {
   console.error('JWT_SECRET must be defined in .env');
@@ -21,7 +24,15 @@ if (!process.env.JWT_SECRET) {
 // Connect to MongoDB Atlas using environment variables.
 connectDB();
 
-app.use(cors());
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error('Not allowed by CORS'));
+  },
+}));
 app.use(express.json());
 
 // API route placeholders for authentication, plants, user plant collection, and users.
