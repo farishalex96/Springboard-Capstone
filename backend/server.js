@@ -16,6 +16,19 @@ const normalizeOrigin = (origin) => origin.replace(/\/+$/, '');
 const allowedOrigins = process.env.FRONTEND_URL
   ? process.env.FRONTEND_URL.split(',').map((origin) => normalizeOrigin(origin.trim())).filter(Boolean)
   : [];
+const allowedRenderHost = /\.onrender\.com$/i;
+
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+  if (allowedOrigins.length === 0) return true;
+
+  try {
+    const url = new URL(normalizeOrigin(origin));
+    return allowedOrigins.includes(normalizeOrigin(origin)) || allowedRenderHost.test(url.hostname);
+  } catch {
+    return false;
+  }
+};
 
 if (!process.env.JWT_SECRET) {
   console.error('JWT_SECRET must be defined in .env');
@@ -27,9 +40,7 @@ connectDB();
 
 app.use(cors({
   origin(origin, callback) {
-    const normalizedOrigin = origin ? normalizeOrigin(origin) : '';
-
-    if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(normalizedOrigin)) {
+    if (isAllowedOrigin(origin)) {
       return callback(null, true);
     }
 
