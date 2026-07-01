@@ -12,8 +12,9 @@ import userRoutes from './routes/users.js';
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
+const normalizeOrigin = (origin) => origin.replace(/\/+$/, '');
 const allowedOrigins = process.env.FRONTEND_URL
-  ? process.env.FRONTEND_URL.split(',').map((origin) => origin.trim()).filter(Boolean)
+  ? process.env.FRONTEND_URL.split(',').map((origin) => normalizeOrigin(origin.trim())).filter(Boolean)
   : [];
 
 if (!process.env.JWT_SECRET) {
@@ -26,7 +27,9 @@ connectDB();
 
 app.use(cors({
   origin(origin, callback) {
-    if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+    const normalizedOrigin = origin ? normalizeOrigin(origin) : '';
+
+    if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(normalizedOrigin)) {
       return callback(null, true);
     }
 
